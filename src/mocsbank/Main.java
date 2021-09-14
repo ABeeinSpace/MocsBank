@@ -36,8 +36,18 @@ public class Main {
 //		function so that we can call it inside a loop for numDays.
 		do {
 
+			switch (in.next()) {
+				case "":
+
+					break;
+			}
+
 		} while(numCommandsExecuted <= numCommands);
 
-		// endOfDay(); // Function call to do a couple of things necessary for closeout of a given day.
+//		endOfDay(); // Function call to do a couple of things necessary for closeout of a given day.
+	}
+
+	public static void endOfDay() {
+		System.out.println("Implement meh");
 	}
 }
