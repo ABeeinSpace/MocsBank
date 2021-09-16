@@ -14,9 +14,9 @@ public class MocsBankAccount {
 
 	//region Constructors
 	// Full constructor that instantiates all data members
-	public MocsBankAccount(int accountNumber, int ID, String firstName, String lastName, double accountBalance) {
+	public MocsBankAccount(int accountNumber, String firstName, String lastName, double accountBalance) {
 		this.accountNumber = accountNumber;
-		this.ID = ID;
+		this.ID = accountNumber;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.accountBalance = accountBalance;

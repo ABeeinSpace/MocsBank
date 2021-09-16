@@ -32,13 +32,30 @@ public class Main {
 		int numCommands = in.nextInt();
 		int numCommandsExecuted = 0;
 
+		MocsBankAccount[] accounts = new MocsBankAccount [maxAccounts];
+		MocsBankTransaction[] transactions = new MocsBankTransaction[maxTransactions];
+
 //		Command execution loop follows on next line. This will probably need to be broken out into a separate
 //		function so that we can call it inside a loop for numDays.
 		do {
 
 			switch (in.next()) {
-				case "":
+				case "OPENACCOUNT":
+					openAccount(in);
+					break;
+				case "PRINTBALANCE":
+					break;
+				case "DEPOSIT":
+					break;
+				case "WITHDRAW":
+					break;
+				case "TRANSFER":
+					break;
+				case "CLOSEACCOUNT":
 
+					break;
+				case "TRANSACTIONREPORT":
+					printTransactionReport();
 					break;
 			}
 
@@ -49,5 +66,24 @@ public class Main {
 
 	public static void endOfDay() {
 		System.out.println("Implement meh");
+	}
+
+	public static void openAccount(Scanner in, MocsBankAccount[] accounts,) {
+		int accountNumber = in.nextInt();
+		String firstName = in.next();
+		String lastName = in.next();
+		double balance = in.nextDouble();
+
+		accounts[MocsBankAccount.getNumAccounts() + 1] = new MocsBankAccount(accountNumber, firstName, lastName, accountNumber);
+
+		return ;
+	}
+
+	public static void closeAccount() {
+
+	}
+
+	public static void printTransactionReport () {
+
 	}
 }
