@@ -95,8 +95,5 @@ public class MocsBankTransaction {
 //	public static void incrementNumTransactions() {
 //		numTransactions++;
 //	}
-//	public static void decrementNumTransactions() {
-//		numTransactions--;
-//	}
 	//endregion
 }

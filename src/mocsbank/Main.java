@@ -9,8 +9,6 @@
 
 package mocsbank;
 
-import jdk.swing.interop.SwingInterOpUtils;
-
 import java.util.*;
 import java.io.*;
 
@@ -37,36 +35,44 @@ public class Main {
 		int numDays = in.nextInt();
 		int numCommands = in.nextInt();
 		int numCommandsExecuted = 0;
+		int numDaysSimulated = 0;
 
 		MocsBankAccount[] accounts = new MocsBankAccount [maxAccounts];
 		MocsBankTransaction[] transactions = new MocsBankTransaction[maxTransactions];
 
 //		Command execution loop follows on next line. This will probably need to be broken out into a separate
 //		function so that we can call it inside a loop for numDays.
-		do {
+		while (numDaysSimulated <= numDays) {
+			do {
 
-			switch (in.next()) {
-				case "OPENACCOUNT":
-					openAccount(in, accounts);
-					break;
-				case "PRINTBALANCE":
-					printBalance(accounts);
-					break;
-				case "DEPOSIT":
-					break;
-				case "WITHDRAW":
-					break;
-				case "TRANSFER":
-					break;
-				case "CLOSEACCOUNT":
+				switch (in.next()) {
+					case "OPENACCOUNT":
+						openAccount(in, accounts);
+						break;
+					case "PRINTBALANCE":
+						printBalance(accounts, in);
+						break;
+					case "DEPOSIT":
+						deposit(accounts, in);
+						break;
+					case "WITHDRAW":
+						withdraw(accounts, in);
+						break;
+					case "TRANSFER":
+						break;
+					case "CLOSEACCOUNT":
 
-					break;
-				case "TRANSACTIONREPORT":
-					printTransactionReport();
-					break;
-			}
+						break;
+					case "TRANSACTIONREPORT":
+						printTransactionReport(accounts, in);
+						break;
+				}
 
-		} while(numCommandsExecuted <= numCommands);
+			} while(numCommandsExecuted <= numCommands);
+
+		numDaysSimulated++;
+		}
+
 
 	}
 
@@ -83,6 +89,10 @@ public class Main {
 
 		accounts[MocsBankAccount.getNumAccounts() + 1] = new MocsBankAccount(accountNumber, firstName, lastName, accountNumber);
 
+		System.out.println("    New Account Opened");
+		String stringValue = accounts[MocsBankAccount.getNumAccounts() + 1].toString();
+		stringValue += String.format("Opening Balance: %f\n", balance);
+		System.out.println(stringValue);
 	}
 
 
@@ -92,6 +102,7 @@ public class Main {
 		// Checking for accounts in the bank. If there's no accounts, we need to print a separate error message.
 		if (MocsBankAccount.getNumAccounts() == 0) {
 			System.out.println("    Error: cannot make deposit. There are no open accounts in MocsBank.");
+			return;
 		}
 
 		int accountNum = in.nextInt();
@@ -101,6 +112,7 @@ public class Main {
 			// error.
 			System.out.printf("    Error: cannot make deposit. Account # %d was not found in the system.\n",
 					accountNum);
+			return;
 		}
 
 		double newBalance = accounts[accountIndex].getAccountBalance() + depositAmount;
@@ -108,8 +120,10 @@ public class Main {
 		MocsBankTransaction deposit = new MocsBankTransaction("Deposit", accountNum, depositAmount,
 				accounts[accountIndex].getAccountBalance(), newBalance);
 
-		System.out.println();
-
+		String stringValue = accounts[MocsBankAccount.getNumAccounts() + 1].toString();
+		stringValue += String.format("Deposit Amount: %f", depositAmount);
+		stringValue += String.format("New Balance: %f\n", newBalance);
+		System.out.println(stringValue);
 	}
 
 	public static void withdraw(MocsBankAccount[] accounts, Scanner in) {
@@ -117,6 +131,7 @@ public class Main {
 		// Checking for accounts in the bank. If there's no accounts, we need to print a separate error message.
 		if (MocsBankAccount.getNumAccounts() == 0) {
 			System.out.println("    Error: cannot make withdrawal. There are no open accounts in MocsBank.");
+			return;
 		}
 
 		int accountNum = in.nextInt();
@@ -125,22 +140,47 @@ public class Main {
 			// error.
 			System.out.printf("    Error: cannot make withdrawal. Account # %d was not found in the system.\n",
 					accountNum);
+			return;
 		}
+		int accountIndex = binarySearch(accounts, accountNum);
+
+		double newBalance = accounts[accountIndex].getAccountBalance() - withdrawnAmount;
+
+		if (newBalance < 0) {
+			System.out.println("    Error: Insufficient funds.");
+			return;
+		}
+
+		MocsBankTransaction withdrawal = new MocsBankTransaction("Withdrawal", accountNum, withdrawnAmount,
+				accounts[accountIndex].getAccountBalance(), newBalance);
 
 	}
 
+	public static void transfer(MocsBankAccount[] accounts, Scanner in){
+
+	}
 
 	public static void closeAccount() {
 		System.out.println("CLOSEACCOUNT:");
 	}
 
-	public static void printTransactionReport () {
-		System.out.println("TRANSACTIONREPORT:");
+	public static void printTransactionReport(MocsBankAccount[] accounts, Scanner in) {
+		System.out.println("MocsBank Transaction Report");
 
+		System.out.printf("Day: ");
 	}
 
-	public static void printBalance(MocsBankAccount[] accounts) {
+	public static void printBalance(MocsBankAccount[] accounts, Scanner in) {
 		System.out.println("PRINTBALANCE:");
+		int accountNum = in.nextInt();
+		if (binarySearch(accounts, accountNum) == -1) {
+			System.out.printf("Error: cannot print balance. Account #%i was not found in the system.", accountNum);
+			return;
+		}
+
+		String stringValue = accounts[accountNum].toString();
+		stringValue += String.format("Current Balance: %f", accounts[accountNum].getAccountBalance());
+		System.out.println(stringValue);
 	}
 
 	public static int binarySearch(MocsBankAccount[] accounts, int value) {

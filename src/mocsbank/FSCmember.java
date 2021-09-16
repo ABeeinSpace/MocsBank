@@ -22,6 +22,7 @@ public class FSCmember {
 	//endregion
 
 	//region Getters and Setters
+
 	public int getID() {
 		return ID;
 	}
@@ -45,6 +46,7 @@ public class FSCmember {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
+
 	//endregion
 
 

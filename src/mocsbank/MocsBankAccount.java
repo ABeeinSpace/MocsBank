@@ -21,11 +21,12 @@ public class MocsBankAccount {
 		this.lastName = lastName;
 		this.accountBalance = accountBalance;
 		FSCmember customer = new FSCmember(ID, firstName, lastName);
+		numAccounts++;
 	}
 
 	// default empty constructor
 	public MocsBankAccount() {
-
+		numAccounts++;
 	}
 	//endregion
 
@@ -64,5 +65,14 @@ public class MocsBankAccount {
 	public static void decrementNumAccounts() {
 		numAccounts--;
 	}
+
+	@Override
+	public String toString() {
+		String returnValue = String.format("Account: %i\n", accountNumber);
+		returnValue += String.format("Name: %s %s\n", firstName, lastName);
+
+		return returnValue;
+	}
+
 	//endregion
 }
