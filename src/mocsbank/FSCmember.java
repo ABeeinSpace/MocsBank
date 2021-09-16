@@ -1,5 +1,6 @@
 package mocsbank;
 
+@SuppressWarnings("SpellCheckingInspection")
 public class FSCmember {
 
 	//region Data Members

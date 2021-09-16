@@ -68,8 +68,8 @@ public class MocsBankAccount {
 
 	@Override
 	public String toString() {
-		String returnValue = String.format("Account: %i\n", accountNumber);
-		returnValue += String.format("Name: %s %s\n", firstName, lastName);
+		String returnValue = String.format("\tAccount: %d\n", accountNumber);
+		returnValue += String.format("\tName: %s %s\n", firstName, lastName);
 
 		return returnValue;
 	}

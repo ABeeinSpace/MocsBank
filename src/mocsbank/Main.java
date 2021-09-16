@@ -17,15 +17,15 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 
 		File inputFile = new File("MocsBank.in");
-		Scanner in = new Scanner(System.in);
+		Scanner in = new Scanner(inputFile);
 		File outputFile = new File("MocsBank.out");
 		PrintWriter out = new PrintWriter(outputFile);
 
 		if (!inputFile.exists()) {
 			System.out.println("FATAL ERROR: The file " + inputFile + " cannot be read. Please ensure the file exists" +
 					" in the project directory. The program will now exit");
-			System.exit(-4); // Bit of trivia here. Driver number 4 in Formula 1 is my favorite driver, Lando Norris.
-			// Nobody's gonna see these exit codes, so I think I can have fun with them.
+			System.exit(-4); // A bit of trivia here. Driver number 4 in Formula 1 is my favorite driver, Lando Norris.
+			// Nobody's going to see these exit codes, so I think I can have fun with them.
 		}
 
 		// Setting some parameters for the bank, namely the number of accounts that can be opened at any one time and
@@ -53,12 +53,13 @@ public class Main {
 						printBalance(accounts, in);
 						break;
 					case "DEPOSIT":
-						deposit(accounts, in);
+						deposit(accounts, transactions, in);
 						break;
 					case "WITHDRAW":
 						withdraw(accounts, in);
 						break;
 					case "TRANSFER":
+						transfer(accounts, transactions, in);
 						break;
 					case "CLOSEACCOUNT":
 
@@ -87,17 +88,17 @@ public class Main {
 		String lastName = in.next();
 		double balance = in.nextDouble();
 
-		accounts[MocsBankAccount.getNumAccounts() + 1] = new MocsBankAccount(accountNumber, firstName, lastName, accountNumber);
+		accounts[MocsBankAccount.getNumAccounts()] = new MocsBankAccount(accountNumber, firstName, lastName, accountNumber);
 
 		System.out.println("    New Account Opened");
-		String stringValue = accounts[MocsBankAccount.getNumAccounts() + 1].toString();
-		stringValue += String.format("Opening Balance: %f\n", balance);
+		String stringValue = accounts[0].toString();
+		stringValue += String.format("\tOpening Balance: %f\n", balance);
 		System.out.println(stringValue);
 	}
 
 
 
-	public static void deposit(MocsBankAccount[] accounts, Scanner in) {
+	public static void deposit(MocsBankAccount[] accounts, MocsBankTransaction[] transactions, Scanner in) {
 		System.out.println("DEPOSIT:");
 		// Checking for accounts in the bank. If there's no accounts, we need to print a separate error message.
 		if (MocsBankAccount.getNumAccounts() == 0) {
@@ -119,10 +120,11 @@ public class Main {
 		accounts[accountIndex].setAccountBalance(newBalance);
 		MocsBankTransaction deposit = new MocsBankTransaction("Deposit", accountNum, depositAmount,
 				accounts[accountIndex].getAccountBalance(), newBalance);
+		transactions[MocsBankTransaction.getNumTransactions() + 1] = deposit;
 
-		String stringValue = accounts[MocsBankAccount.getNumAccounts() + 1].toString();
-		stringValue += String.format("Deposit Amount: %f", depositAmount);
-		stringValue += String.format("New Balance: %f\n", newBalance);
+		String stringValue = accounts[MocsBankAccount.getNumAccounts() - 1].toString();
+		stringValue += String.format("\tDeposit Amount: %f\n", depositAmount);
+		stringValue += String.format("\tNew Balance: %f\n", newBalance);
 		System.out.println(stringValue);
 	}
 
@@ -154,9 +156,10 @@ public class Main {
 		MocsBankTransaction withdrawal = new MocsBankTransaction("Withdrawal", accountNum, withdrawnAmount,
 				accounts[accountIndex].getAccountBalance(), newBalance);
 
+
 	}
 
-	public static void transfer(MocsBankAccount[] accounts, Scanner in){
+	public static void transfer(MocsBankAccount[] accounts, MocsBankTransaction[] transactions, Scanner in){
 
 	}
 
@@ -177,15 +180,15 @@ public class Main {
 			System.out.printf("Error: cannot print balance. Account #%i was not found in the system.", accountNum);
 			return;
 		}
-
-		String stringValue = accounts[accountNum].toString();
-		stringValue += String.format("Current Balance: %f", accounts[accountNum].getAccountBalance());
+		int index = binarySearch(accounts, accountNum);
+		String stringValue = accounts[index].toString();
+		stringValue += String.format("Current Balance: %f", accounts[index].getAccountBalance());
 		System.out.println(stringValue);
 	}
 
 	public static int binarySearch(MocsBankAccount[] accounts, int value) {
 		int low = 0;
-		int high = accounts.length;
+		int high = MocsBankAccount.getNumAccounts();
 		int mid = (low + high) / 2;
 
 		while (low <=high ) {
