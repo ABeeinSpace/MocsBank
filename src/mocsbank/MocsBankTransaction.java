@@ -21,6 +21,7 @@ public class MocsBankTransaction {
 		this.amount = amount;
 		this.balanceBefore = balanceBefore;
 		this.balanceAfter = balanceAfter;
+		numTransactions++;
 	}
 
 	public MocsBankTransaction(String transactionType, int accountNumber1, double amount, double balanceBefore,
@@ -30,10 +31,11 @@ public class MocsBankTransaction {
 		this.amount = amount;
 		this.balanceBefore = balanceBefore;
 		this.balanceAfter = balanceAfter;
+		numTransactions++;
 	}
 
 	public MocsBankTransaction() {
-
+		numTransactions++;
 	}
 	//endregion
 
@@ -90,11 +92,11 @@ public class MocsBankTransaction {
 		return numTransactions;
 	}
 
-	public static void incrementNumTransactions() {
-		numTransactions++;
-	}
-	public static void decrementNumTransactions() {
-		numTransactions--;
-	}
+//	public static void incrementNumTransactions() {
+//		numTransactions++;
+//	}
+//	public static void decrementNumTransactions() {
+//		numTransactions--;
+//	}
 	//endregion
 }

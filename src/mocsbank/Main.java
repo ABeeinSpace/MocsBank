@@ -83,27 +83,42 @@ public class Main {
 
 		accounts[MocsBankAccount.getNumAccounts() + 1] = new MocsBankAccount(accountNumber, firstName, lastName, accountNumber);
 
-		return ;
 	}
 
 
 
 	public static void deposit(MocsBankAccount[] accounts, Scanner in) {
+		System.out.println("DEPOSIT:");
+		// Checking for accounts in the bank. If there's no accounts, we need to print a separate error message.
+		if (MocsBankAccount.getNumAccounts() == 0) {
+			System.out.println("    Error: cannot make deposit. There are no open accounts in MocsBank.");
+		}
+
 		int accountNum = in.nextInt();
 		double depositAmount = in.nextDouble();
-		if (binarySearch(accounts, accountNum) == -1) { //Check to make sure account actually exists. If not, print an
+		int accountIndex = binarySearch(accounts, accountNum);
+		if (accountIndex == -1) { //Check to make sure account actually exists. If not, print an
 			// error.
 			System.out.printf("    Error: cannot make deposit. Account # %d was not found in the system.\n",
 					accountNum);
 		}
 
-		MocsBankTransaction deposit = new MocsBankTransaction("Deposit", accountNum, depositAmount, );
+		double newBalance = accounts[accountIndex].getAccountBalance() + depositAmount;
+		accounts[accountIndex].setAccountBalance(newBalance);
+		MocsBankTransaction deposit = new MocsBankTransaction("Deposit", accountNum, depositAmount,
+				accounts[accountIndex].getAccountBalance(), newBalance);
 
 		System.out.println();
 
 	}
 
 	public static void withdraw(MocsBankAccount[] accounts, Scanner in) {
+		System.out.println("WITHDRAW:");
+		// Checking for accounts in the bank. If there's no accounts, we need to print a separate error message.
+		if (MocsBankAccount.getNumAccounts() == 0) {
+			System.out.println("    Error: cannot make withdrawal. There are no open accounts in MocsBank.");
+		}
+
 		int accountNum = in.nextInt();
 		double withdrawnAmount = in.nextDouble();
 		if (binarySearch(accounts, accountNum) == -1) { //Check to make sure account actually exists. If not, print an
