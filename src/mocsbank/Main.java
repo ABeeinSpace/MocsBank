@@ -1,10 +1,15 @@
-// Aidan Border
-// 09/10/2021
-// CSC 2290
-// Honor Code: I will practice academic and personal integrity and excellence of character and expect the same from
-// others
+/*
+ Aidan Border
+ 09/10/2021
+ CSC 2290
+ Honor Code: I will practice academic and personal integrity and excellence of character and expect the same from
+ others
+ https://www.youtube.com/watch?v=dQw4w9WgXcQ
+*/
 
 package mocsbank;
+
+import jdk.swing.interop.SwingInterOpUtils;
 
 import java.util.*;
 import java.io.*;
@@ -21,7 +26,8 @@ public class Main {
 		if (!inputFile.exists()) {
 			System.out.println("FATAL ERROR: The file " + inputFile + " cannot be read. Please ensure the file exists" +
 					" in the project directory. The program will now exit");
-			System.exit(-1);
+			System.exit(-4); // Bit of trivia here. Driver number 4 in Formula 1 is my favorite driver, Lando Norris.
+			// Nobody's gonna see these exit codes, so I think I can have fun with them.
 		}
 
 		// Setting some parameters for the bank, namely the number of accounts that can be opened at any one time and
@@ -41,9 +47,10 @@ public class Main {
 
 			switch (in.next()) {
 				case "OPENACCOUNT":
-					openAccount(in);
+					openAccount(in, accounts);
 					break;
 				case "PRINTBALANCE":
+					printBalance(accounts);
 					break;
 				case "DEPOSIT":
 					break;
@@ -61,14 +68,14 @@ public class Main {
 
 		} while(numCommandsExecuted <= numCommands);
 
-//		endOfDay(); // Function call to do a couple of things necessary for closeout of a given day.
 	}
 
 	public static void endOfDay() {
 		System.out.println("Implement meh");
 	}
 
-	public static void openAccount(Scanner in, MocsBankAccount[] accounts,) {
+	public static void openAccount(Scanner in, MocsBankAccount[] accounts) {
+		System.out.println("OPENACCOUNT:");
 		int accountNumber = in.nextInt();
 		String firstName = in.next();
 		String lastName = in.next();
@@ -79,11 +86,64 @@ public class Main {
 		return ;
 	}
 
-	public static void closeAccount() {
 
+
+	public static void deposit(MocsBankAccount[] accounts, Scanner in) {
+		int accountNum = in.nextInt();
+		double depositAmount = in.nextDouble();
+		if (binarySearch(accounts, accountNum) == -1) { //Check to make sure account actually exists. If not, print an
+			// error.
+			System.out.printf("    Error: cannot make deposit. Account # %d was not found in the system.\n",
+					accountNum);
+		}
+
+		MocsBankTransaction deposit = new MocsBankTransaction("Deposit", accountNum, depositAmount, );
+
+		System.out.println();
+
+	}
+
+	public static void withdraw(MocsBankAccount[] accounts, Scanner in) {
+		int accountNum = in.nextInt();
+		double withdrawnAmount = in.nextDouble();
+		if (binarySearch(accounts, accountNum) == -1) { //Check to make sure account actually exists. If not, print an
+			// error.
+			System.out.printf("    Error: cannot make withdrawal. Account # %d was not found in the system.\n",
+					accountNum);
+		}
+
+	}
+
+
+	public static void closeAccount() {
+		System.out.println("CLOSEACCOUNT:");
 	}
 
 	public static void printTransactionReport () {
+		System.out.println("TRANSACTIONREPORT:");
 
 	}
+
+	public static void printBalance(MocsBankAccount[] accounts) {
+		System.out.println("PRINTBALANCE:");
+	}
+
+	public static int binarySearch(MocsBankAccount[] accounts, int value) {
+		int low = 0;
+		int high = accounts.length;
+		int mid = (low + high) / 2;
+
+		while (low <=high ) {
+			mid = (low + high) / 2;
+			if (value == accounts[mid].getAccountNumber()) {
+				return mid;
+			} else if (value < accounts[mid].getAccountNumber()) {
+				high = mid - 1;
+			} else if (value > accounts[mid].getAccountNumber()) {
+				low = mid + 1;
+			}
+		}
+		return -1;
+	}
+
 }

@@ -23,6 +23,15 @@ public class MocsBankTransaction {
 		this.balanceAfter = balanceAfter;
 	}
 
+	public MocsBankTransaction(String transactionType, int accountNumber1, double amount, double balanceBefore,
+	                           double balanceAfter) {
+		this.transactionType = transactionType;
+		this.accountNumber1 = accountNumber1;
+		this.amount = amount;
+		this.balanceBefore = balanceBefore;
+		this.balanceAfter = balanceAfter;
+	}
+
 	public MocsBankTransaction() {
 
 	}
