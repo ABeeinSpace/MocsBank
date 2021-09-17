@@ -4,13 +4,14 @@
  CSC 2290
  Honor Code: I will practice academic and personal integrity and excellence of character and expect the same from
  others
- https://www.youtube.com/watch?v=dQw4w9WgXcQ
 */
 
 package mocsbank;
 
 import java.util.*;
 import java.io.*;
+
+//TODO: COMMENT YA CODE
 
 public class Main {
 
@@ -43,8 +44,13 @@ public class Main {
 //		Command execution loop follows on next line. This will probably need to be broken out into a separate
 //		function so that we can call it inside a loop for numDays.
 		while (numDaysSimulated <= numDays) {
-			do {
 
+			numDaysSimulated++;
+
+			System.out.println("***************************************");
+			System.out.printf("Welcome to MocsBank Day #%d\n", numDaysSimulated);
+			System.out.println("***************************************");
+			do {
 				switch (in.next()) {
 					case "OPENACCOUNT":
 						openAccount(in, accounts);
@@ -65,13 +71,11 @@ public class Main {
 
 						break;
 					case "TRANSACTIONREPORT":
-						printTransactionReport(accounts, in);
+						printTransactionReport(accounts, in, numDaysSimulated);
 						break;
 				}
 
 			} while(numCommandsExecuted <= numCommands);
-
-		numDaysSimulated++;
 
 		}
 
@@ -88,13 +92,38 @@ public class Main {
 		String firstName = in.next();
 		String lastName = in.next();
 		double balance = in.nextDouble();
+		int insertIndex = 0;
+		// If there aren't any accounts in the system yet, simply bypass the sorting algorithm and plonk the account
+		// in at index 0 of the array.
+		if (MocsBankAccount.getNumAccounts() == 0) {
+			accounts[0] = new MocsBankAccount(accountNumber, firstName, lastName, accountNumber);
+			System.out.println("    New Account Opened");
 
-		accounts[MocsBankAccount.getNumAccounts()] = new MocsBankAccount(accountNumber, firstName, lastName, accountNumber);
+			String stringValue = accounts[0].toString();
+			stringValue += String.format("\tOpening Balance: %f\n", balance);
+			System.out.println(stringValue);
+		// Else, there's some shifty business afoot
+		} else {
+			MocsBankAccount newAccount = new MocsBankAccount(accountNumber, firstName, lastName, accountNumber);
+			for (int i = 0; i < MocsBankAccount.getNumAccounts() - 1; i++) {
+				if (newAccount.getID() > accounts[i].getID()) {
+					insertIndex = i;
+					break;
+				}
+			}
 
-		System.out.println("    New Account Opened");
-		String stringValue = accounts[0].toString();
-		stringValue += String.format("\tOpening Balance: %f\n", balance);
-		System.out.println(stringValue);
+			for (int i = 0; i >= insertIndex; i--) {
+				accounts[i + 1] = accounts[i];
+			}
+
+			accounts[insertIndex] = newAccount;
+
+			System.out.println("    New Account Opened\n");
+			String stringValue = accounts[insertIndex].toString();
+			stringValue += String.format("\tOpening Balance: %f\n", balance);
+			System.out.println(stringValue);
+		}
+
 	}
 
 
@@ -103,7 +132,7 @@ public class Main {
 		System.out.println("DEPOSIT:");
 		// Checking for accounts in the bank. If there's no accounts, we need to print a separate error message.
 		if (MocsBankAccount.getNumAccounts() == 0) {
-			System.out.println("    Error: cannot make deposit. There are no open accounts in MocsBank.");
+			System.out.println("\tError: cannot make deposit. There are no open accounts in MocsBank.");
 			return;
 		}
 
@@ -112,7 +141,7 @@ public class Main {
 		int accountIndex = binarySearch(accounts, accountNum);
 		if (accountIndex == -1) { //Check to make sure account actually exists. If not, print an
 			// error.
-			System.out.printf("    Error: cannot make deposit. Account # %d was not found in the system.\n",
+			System.out.printf("\tError: cannot make deposit. Account # %d was not found in the system.\n",
 					accountNum);
 			return;
 		}
@@ -123,7 +152,7 @@ public class Main {
 				accounts[accountIndex].getAccountBalance(), newBalance);
 		transactions[MocsBankTransaction.getNumTransactions() + 1] = deposit;
 
-		String stringValue = accounts[MocsBankAccount.getNumAccounts() - 1].toString();
+		String stringValue = accounts[accountIndex].toString();
 		stringValue += String.format("\tDeposit Amount: %f\n", depositAmount);
 		stringValue += String.format("\tNew Balance: %f\n", newBalance);
 		System.out.println(stringValue);
@@ -133,7 +162,7 @@ public class Main {
 		System.out.println("WITHDRAW:");
 		// Checking for accounts in the bank. If there's no accounts, we need to print a separate error message.
 		if (MocsBankAccount.getNumAccounts() == 0) {
-			System.out.println("    Error: cannot make withdrawal. There are no open accounts in MocsBank.");
+			System.out.println("\tError: cannot make withdrawal. There are no open accounts in MocsBank.");
 			return;
 		}
 
@@ -141,7 +170,7 @@ public class Main {
 		double withdrawnAmount = in.nextDouble();
 		if (binarySearch(accounts, accountNum) == -1) { //Check to make sure account actually exists. If not, print an
 			// error.
-			System.out.printf("    Error: cannot make withdrawal. Account # %d was not found in the system.\n",
+			System.out.printf("\tError: cannot make withdrawal. Account # %d was not found in the system.\n",
 					accountNum);
 			return;
 		}
@@ -150,29 +179,62 @@ public class Main {
 		double newBalance = accounts[accountIndex].getAccountBalance() - withdrawnAmount;
 
 		if (newBalance < 0) {
-			System.out.println("    Error: Insufficient funds.");
+			System.out.println("\tError: Insufficient funds.");
 			return;
 		}
 
 		MocsBankTransaction withdrawal = new MocsBankTransaction("Withdrawal", accountNum, withdrawnAmount,
 				accounts[accountIndex].getAccountBalance(), newBalance);
 
-
+		//TODO: Add printing here (Could use toString from MocsBankTransactions or roll a bespoke solution here,
+		// doesn't really matter all that much.
 	}
 
+	//TODO: Test dis
 	public static void transfer(MocsBankAccount[] accounts, MocsBankTransaction[] transactions, Scanner in){
+		int accountNum1 = in.nextInt();
+		int accountNum2 = in.nextInt();
+		double transferAmount = in.nextDouble();
+
+		int index = binarySearch(accounts, accountNum1);
+		int secondIndex = binarySearch(accounts, accountNum2);
+		double afterBalance = accounts[index].getAccountBalance() - transferAmount;
+		MocsBankTransaction transfer = new MocsBankTransaction("Transfer",accountNum1, accountNum2, transferAmount,
+				accounts[index].getAccountBalance(), afterBalance);
+
+		accounts[index].setAccountBalance(afterBalance);
+		accounts[secondIndex].setAccountBalance(accounts[secondIndex].getAccountBalance() + transferAmount);
 
 	}
 
-	public static void closeAccount() {
+	public static void closeAccount(MocsBankAccount[] accounts, Scanner in) {
 		System.out.println("CLOSEACCOUNT:");
+
+		int accountNumToBeClosed = in.nextInt();
+
+		int indexToBeClosed = binarySearch(accounts, accountNumToBeClosed);
+
+		System.out.println("    Account Has Been Closed");
+		String stringValue = accounts[indexToBeClosed].toString();
+		stringValue += String.format("\tClosing Balance: %f\n", accounts[indexToBeClosed].getAccountBalance());
+		System.out.println(stringValue);
+
+		for (int i = 0; i >= indexToBeClosed; i--) {
+			accounts[i - 1] = accounts[i];
+		}
+		MocsBankAccount.decrementNumAccounts();
 	}
 
-	public static void printTransactionReport(MocsBankAccount[] accounts, Scanner in) {
+	//TODO: Finish Transaction Report. You're going to want to use toString()s extensively here
+	public static void printTransactionReport(MocsBankAccount[] accounts, Scanner in, int numDaysSimulated) {
 		System.out.println("MocsBank Transaction Report");
 
-		System.out.printf("Day: ");
+		System.out.printf("\tDay: %d", numDaysSimulated);
+		System.out.printf("\t# of Transactions: %d", MocsBankTransaction.getNumTransactions());
+
+
 	}
+
 
 	public static void printBalance(MocsBankAccount[] accounts, Scanner in) {
 		System.out.println("PRINTBALANCE:");
@@ -189,7 +251,7 @@ public class Main {
 
 	public static int binarySearch(MocsBankAccount[] accounts, int value) {
 		int low = 0;
-		int high = MocsBankAccount.getNumAccounts();
+		int high = MocsBankAccount.getNumAccounts() - 1;
 		int mid = (low + high) / 2;
 
 		while (low <=high ) {

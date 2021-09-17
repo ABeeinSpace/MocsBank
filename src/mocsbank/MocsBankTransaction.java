@@ -34,9 +34,9 @@ public class MocsBankTransaction {
 		numTransactions++;
 	}
 
-	public MocsBankTransaction() {
-		numTransactions++;
-	}
+//	public MocsBankTransaction() {
+//		numTransactions++;
+//	}
 	//endregion
 
 	//region Getters and Setters
@@ -96,4 +96,11 @@ public class MocsBankTransaction {
 //		numTransactions++;
 //	}
 	//endregion
+
+
+	@Override
+	public String toString() {
+		String outputString = transactionType;
+		return outputString;
+	}
 }
