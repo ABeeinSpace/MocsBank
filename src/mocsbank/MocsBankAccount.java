@@ -4,6 +4,7 @@
  CSC 2290
  Honor Code: I will practice academic and personal integrity and excellence of character and expect the same from
  others
+ Dis code kinda sux
 */
 
 package mocsbank;
@@ -31,12 +32,10 @@ public class MocsBankAccount {
 		this.lastName = lastName;
 		this.accountBalance = accountBalance;
 		FSCmember customer = new FSCmember(ID, firstName, lastName);
-		numAccounts++;
 	}
 
 	// default empty constructor
 	public MocsBankAccount() {
-		numAccounts++;
 	}
 	//endregion
 

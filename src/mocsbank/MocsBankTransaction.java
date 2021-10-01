@@ -1,3 +1,12 @@
+/*
+ Aidan Border
+ 09/10/2021
+ CSC 2290
+ Honor Code: I will practice academic and personal integrity and excellence of character and expect the same from
+ others
+ Dis code isn't bad
+*/
+
 package mocsbank;
 
 public class MocsBankTransaction {
@@ -91,6 +100,11 @@ public class MocsBankTransaction {
 	public static int getNumTransactions() {
 		return numTransactions;
 	}
+
+	public static void setNumTransactions(int innumTransactions) {
+		numTransactions = innumTransactions;
+	}
+
 
 //	public static void incrementNumTransactions() {
 //		numTransactions++;
